@@ -2,17 +2,20 @@ package com.example.a127107.stepcounter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.nfc.Tag;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,11 +31,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     SensorManager sensorManager;
     TextView tv_steps ;
     boolean running = false;
-    double steps = 0;
-    double stepCounter = 0;
+    int steps = 0;
+    int stepCounter = 0;
     ArrayList<Fragment> al;
     MyFragmentPagerAdapter adapter;
     ViewPager vPager;
+
 
 
 
@@ -51,10 +55,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         al = new ArrayList<Fragment>();
         al.add(new Frag1());
         al.add(new Frag2());
+        al.add(new Frag3());
 
         adapter = new MyFragmentPagerAdapter(fm, al);
 
         vPager.setAdapter(adapter);
+
+
+
 
 
 
@@ -85,15 +93,22 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onSensorChanged(SensorEvent event) {
         if(running){
             if(steps < 1) {
-                steps = (double)event.values[0];
+                steps = (int)event.values[0];
             }
-            stepCounter = (double)event.values[0] - steps;
+            stepCounter = (int)event.values[0] - steps;
             tv_steps.setText(String.valueOf(stepCounter));
-
+/*
             Bundle bundle = new Bundle();
             bundle.putDouble("step",stepCounter);
             Fragment fragment = new Fragment();
             fragment.setArguments(bundle);
+            Log.i(String.valueOf(bundle), "onSensorChanged: ");*/
+
+            /*SharedPreferences prefs = getSharedPreferences("myPref",MainActivity.this.MODE_PRIVATE);
+            SharedPreferences.Editor prefEdit = prefs.edit();
+            prefEdit.putInt("step",stepCounter);
+            prefEdit.commit();*/
+
 
         }
 
